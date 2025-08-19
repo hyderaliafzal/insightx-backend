@@ -49,9 +49,9 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddCors(opt =>
 {
-    opt.AddPolicy("*", builder =>
+    opt.AddPolicy("ConnektaPolicy", builder =>
     {
-        builder.AllowAnyOrigin()
+        builder.WithOrigins("https://x.connekta.au") // specify allowed origin
                .AllowAnyHeader()
                .AllowAnyMethod();
     });
@@ -96,7 +96,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.UseCors("*");
+app.UseCors("ConnektaPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
