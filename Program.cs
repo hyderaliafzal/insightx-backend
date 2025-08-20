@@ -3,6 +3,17 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowedOriginsPolicy", policy =>
+    {
+        policy.WithOrigins("https://x.connekta.au")
+              .SetIsOriginAllowedToAllowWildcardSubdomains()
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
 // Add services to the container.
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpContextAccessor();
@@ -47,15 +58,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddCors(opt =>
-{
-    opt.AddPolicy("ConnektaPolicy", builder =>
-    {
-        builder.WithOrigins("https://x.connekta.au") // specify allowed origin
-               .AllowAnyHeader()
-               .AllowAnyMethod();
-    });
-});
 builder.Services.AddTransient<IGraphRepository, GraphRepository>();
 builder.Services.AddTransient<IDataRepository, DataRepository>();
 builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
@@ -86,7 +88,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 
 var app = builder.Build();
-
+app.UseCors("AllowedOriginsPolicy");
 if (app.Environment.IsDevelopment())
 {
 }
@@ -95,8 +97,6 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
-app.UseCors("ConnektaPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
