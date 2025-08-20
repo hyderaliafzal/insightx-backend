@@ -14,7 +14,6 @@ public class PermissionGroup
 
 
     public string Name { get; set; }
-    public bool IsActive { get; set; }
     public PortalTypeEnum PortalType { get; set; }
     public List<Permission> Permissions { get; set; }
     public List<User> Users { get; set; }
